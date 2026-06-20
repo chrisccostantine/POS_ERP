@@ -16,6 +16,8 @@ Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    var port = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var railwayPort) ? railwayPort : 8080;
+    builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(port));
     builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration).WriteTo.Console());
     builder.Services.AddScaloraInfrastructure(builder.Configuration);
     var jwtKey = builder.Configuration["Authentication:JwtKey"]
