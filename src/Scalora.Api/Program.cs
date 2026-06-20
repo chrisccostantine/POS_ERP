@@ -18,7 +18,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     var port = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var railwayPort) ? railwayPort : 8080;
     builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(port));
-    builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration).WriteTo.Console());
+    builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
     builder.Services.AddScaloraInfrastructure(builder.Configuration);
     var jwtKey = builder.Configuration["Authentication:JwtKey"]
         ?? throw new InvalidOperationException("Authentication:JwtKey is required.");
@@ -168,7 +168,7 @@ public static class DatabaseSeeder
         var roles = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         foreach (var role in new[] { "Admin", "Manager", "Cashier" })
             if (!await roles.RoleExistsAsync(role)) await roles.CreateAsync(new IdentityRole<Guid>(role));
-        var branch = await db.Branches.FirstOrDefaultAsync();
+        var branch = await db.Branches.OrderBy(x => x.Code).FirstOrDefaultAsync();
         if (branch is null) { branch = new Branch { Name = "Main Store", Code = "MAIN" }; db.Branches.Add(branch); await db.SaveChangesAsync(); }
         var users = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
         var admin = await users.FindByEmailAsync("admin@scalora.com");

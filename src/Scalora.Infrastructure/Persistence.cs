@@ -73,6 +73,7 @@ public static class DependencyInjection
             options.Password.RequiredLength = 8;
             options.Password.RequireDigit = true;
             options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = false;
             options.User.RequireUniqueEmail = true;
             options.Lockout.MaxFailedAccessAttempts = 5;
         }).AddRoles<IdentityRole<Guid>>().AddEntityFrameworkStores<ScaloraDbContext>();
