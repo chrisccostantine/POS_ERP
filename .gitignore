@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+appsettings.Local.json
+*.pfx
+*.db
+POS_ERP/
