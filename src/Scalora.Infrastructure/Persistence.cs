@@ -101,7 +101,7 @@ public static class DependencyInjection
             Password = config["PGPASSWORD"] ?? throw new InvalidOperationException("PGPASSWORD is required."),
             SslMode = Npgsql.SslMode.Prefer,
             Pooling = true,
-            MaximumPoolSize = 100
+            MaxPoolSize = 100
         };
         return builder.ConnectionString;
     }
