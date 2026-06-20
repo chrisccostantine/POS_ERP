@@ -62,7 +62,8 @@ try
         var expires = DateTime.UtcNow.AddHours(8);
         var token = new JwtSecurityToken("Scalora", "Scalora.Desktop", claims, expires: expires,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-        return Results.Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(token), expiresAt = expires, user.DisplayName, roles });
+        return Results.Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(token), expiresAt = expires,
+            user.Id, user.BranchId, user.DisplayName, roles });
     });
 
     app.MapGet("/api/products", async (string? search, int page, int pageSize, ScaloraDbContext db, CancellationToken ct) =>

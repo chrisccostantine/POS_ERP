@@ -14,7 +14,8 @@ Scalora is a .NET 8 WPF and ASP.NET Core foundation for an offline-first retail 
 - Encrypted Shopify secrets through ASP.NET Core Data Protection
 - Retrying background sync worker with exponential backoff and absolute-quantity Shopify GraphQL updates
 - Dashboard, product search, sales, and stock adjustment API endpoints
-- Modern WPF dashboard and POS workspace shell
+- Connected WPF login, live dashboard, product search, cart, and checkout workflow
+- Windows DPAPI-protected session persistence
 - PostgreSQL Docker Compose and focused inventory/idempotency tests
 
 ## Prerequisites
@@ -53,7 +54,7 @@ Inventory sync uses absolute quantities and unique reference URIs, making retrie
 
 This repository is a runnable vertical foundation, not the full production system described in the brief. Before release, complete the desktop API binding/login and durable local offline database, product/customer/supplier CRUD screens, returns/exchanges, cash reconciliation, receipt printing, Shopify product import and order payload processors, reports/PDF/Excel exports, backup/restore, migrations, multi-terminal concurrency/lease hardening, integration/load testing, installer signing, monitoring, and disaster-recovery validation.
 
-The desktop shell currently demonstrates the intended UX and MVVM command structure; its data is not yet bound to `Scalora.Api`. Shopify product/order webhook deliveries are authenticated and logged, but only inventory-level updates currently alter local inventory.
+The desktop client is configured through `src/Scalora.Desktop/desktopsettings.json` and currently targets the deployed Railway API. Shopify product/order webhook deliveries are authenticated and logged, but only inventory-level updates currently alter local inventory.
 
 ## Tests
 
