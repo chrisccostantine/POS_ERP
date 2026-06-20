@@ -61,6 +61,16 @@ The desktop shell currently demonstrates the intended UX and MVVM command struct
 dotnet test
 ```
 
+## Railway deployment
+
+1. Create a Railway project from this GitHub repository.
+2. Add a PostgreSQL service to the same Railway project.
+3. In the API service, add references for `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, and `PGPASSWORD` from the PostgreSQL service.
+4. Set `Authentication__JwtKey` to a random secret of at least 32 bytes.
+5. Generate a public domain for the API service and verify `/health` returns a successful response.
+
+Railway builds the root `Dockerfile`; only the ASP.NET API is deployed. PostgreSQL credentials are read from Railway's injected `PG*` variables. Do not deploy the WPF project as a Railway service.
+
 For real deployments, create and review EF Core migrations rather than relying on first-run schema creation:
 
 ```powershell

@@ -1,0 +1,9 @@
+.git
+.vs
+POS_ERP
+**/bin
+**/obj
+**/*.user
+tests
+src/Scalora.Desktop
+appsettings.Local.json

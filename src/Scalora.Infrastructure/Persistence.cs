@@ -62,8 +62,7 @@ public static class DependencyInjection
     public static IServiceCollection AddScaloraInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         var provider = config["Database:Provider"] ?? "PostgreSQL";
-        var connection = config.GetConnectionString("Scalora")
-            ?? throw new InvalidOperationException("ConnectionStrings:Scalora is required.");
+        var connection = BuildConnectionString(config);
         services.AddDbContext<ScaloraDbContext>(options =>
         {
             if (provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase)) options.UseSqlServer(connection);
@@ -84,5 +83,26 @@ public static class DependencyInjection
         services.AddHttpClient<IShopifyClient, ShopifyClient>();
         services.AddHostedService<SyncJobWorker>();
         return services;
+    }
+
+    private static string BuildConnectionString(IConfiguration config)
+    {
+        var configured = config.GetConnectionString("Scalora");
+        var host = config["PGHOST"];
+        if (string.IsNullOrWhiteSpace(host))
+            return configured ?? throw new InvalidOperationException("ConnectionStrings:Scalora is required.");
+
+        var builder = new Npgsql.NpgsqlConnectionStringBuilder
+        {
+            Host = host,
+            Port = int.TryParse(config["PGPORT"], out var port) ? port : 5432,
+            Database = config["PGDATABASE"] ?? "railway",
+            Username = config["PGUSER"] ?? "postgres",
+            Password = config["PGPASSWORD"] ?? throw new InvalidOperationException("PGPASSWORD is required."),
+            SslMode = Npgsql.SslMode.Prefer,
+            Pooling = true,
+            MaximumPoolSize = 100
+        };
+        return builder.ConnectionString;
     }
 }
